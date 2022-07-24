@@ -1,7 +1,6 @@
 package com.devsuperior.dscatolog.dto;
 
 import java.io.Serializable;
-import java.util.Optional;
 
 import com.devsuperior.dscatolog.entities.Category;
 
