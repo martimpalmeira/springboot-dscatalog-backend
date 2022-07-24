@@ -1,6 +1,7 @@
 package com.devsuperior.dscatolog.dto;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import com.devsuperior.dscatolog.entities.Category;
 
@@ -24,7 +25,7 @@ public class CategoryDTO implements Serializable{
 	public CategoryDTO(Category cat) {
 		this.id = cat.getId();
 		this.name = cat.getName();
-	}
+	}	
 
 	public Long getId() {
 		return id;
