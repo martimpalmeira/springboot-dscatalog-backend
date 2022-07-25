@@ -1,8 +1,6 @@
 package com.devsuperior.dscatolog.services;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -27,9 +25,9 @@ public class CategoryService {
 	private CategoryRepository repository;
 
 	@Transactional(readOnly = true)
-	public List<CategoryDTO> findAll() {
-		List<Category> list = repository.findAll();
-		return list.stream().map(cat -> new CategoryDTO(cat)).collect(Collectors.toList());
+	public Page<CategoryDTO> findAll(PageRequest request) {
+		Page<Category> list = repository.findAll(request);
+		return list.map(cat -> new CategoryDTO(cat));
 	}
 
 	@Transactional(readOnly = true)
@@ -64,7 +62,7 @@ public class CategoryService {
 			repository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException("Id not found" + id);
-		}catch(DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			throw new DataBaseException("Integrity violation");
 		}
 	}
