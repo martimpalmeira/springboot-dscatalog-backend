@@ -9,12 +9,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devsuperior.dscatolog.dto.UserDTO;
-import com.devsuperior.dscatolog.entities.Role;
+import com.devsuperior.dscatolog.dto.UserInsertDTO;
 import com.devsuperior.dscatolog.entities.User;
+import com.devsuperior.dscatolog.repositories.RoleRepository;
 import com.devsuperior.dscatolog.repositories.UserRepository;
 import com.devsuperior.dscatolog.services.exceptions.DataBaseException;
 import com.devsuperior.dscatolog.services.exceptions.ResourceNotFoundException;
@@ -24,6 +26,12 @@ public class UserService {
 
 	@Autowired
 	private UserRepository repository;
+	
+	@Autowired
+	private RoleRepository roleRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	@Transactional(readOnly = true)
 	public Page<UserDTO> findAll(Pageable pageable) {
@@ -39,10 +47,12 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserDTO insert(UserDTO dto) {
+	public UserDTO insert(UserInsertDTO dto) {
 		User entity = new User();
 		copyDtoToEntity(dto, entity);
+		entity.setPassword(passwordEncoder.encode(dto.getPassword()));
 		repository.save(entity);
+		
 		return new UserDTO(entity);
 	}
 
@@ -72,7 +82,6 @@ public class UserService {
 		entity.setFirstName(dto.getFirstName());
 		entity.setLastName(dto.getLastName());
 		entity.setEmail(dto.getEmail());
-		entity.setPassword(dto.getEmail());
-		dto.getRoles().forEach(x -> entity.getRoles().add(new Role(x.getId(), null)));
+		dto.getRoles().forEach(x -> entity.getRoles().add(roleRepository.getOne(x.getId())));
 	}
 }

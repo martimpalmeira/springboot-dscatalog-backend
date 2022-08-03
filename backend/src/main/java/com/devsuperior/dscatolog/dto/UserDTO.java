@@ -1,9 +1,10 @@
 package com.devsuperior.dscatolog.dto;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.devsuperior.dscatolog.entities.User;
@@ -20,20 +21,17 @@ public class UserDTO implements Serializable {
 
 	private String email;
 
-	private String password;
-
-	private List<RoleDTO> roles = new ArrayList<>();
+	private Set<RoleDTO> roles = new HashSet<>();
 
 	public UserDTO() {
 
 	}
 
-	public UserDTO(Long id, String firstName, String lastName, String email, String password) {
+	public UserDTO(Long id, String firstName, String lastName, String email) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
-		this.password = password;
 	}
 
 	public UserDTO(User user) {
@@ -41,8 +39,7 @@ public class UserDTO implements Serializable {
 		this.firstName = user.getFirstName();
 		this.lastName = user.getLastName();
 		this.email = user.getEmail();
-		this.password = user.getPassword();
-		this.roles = user.getRoles().stream().map(x -> new RoleDTO(x)).collect(Collectors.toList());
+		user.getRoles().forEach(x -> this.getRoles().add(new RoleDTO(x)));
 	}
 
 	public Long getId() {
@@ -77,15 +74,7 @@ public class UserDTO implements Serializable {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public List<RoleDTO> getRoles() {
+	public Set<RoleDTO> getRoles() {
 		return roles;
 	}
 
