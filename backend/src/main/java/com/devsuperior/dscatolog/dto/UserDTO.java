@@ -2,10 +2,11 @@ package com.devsuperior.dscatolog.dto;
 
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 import com.devsuperior.dscatolog.entities.User;
 
@@ -14,11 +15,13 @@ public class UserDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-
+	
+	@NotBlank(message = "Campo obrigatório")
 	private String firstName;
 
 	private String lastName;
-
+	
+	@Email(message = "Favor inserir um email válido")
 	private String email;
 
 	private Set<RoleDTO> roles = new HashSet<>();
